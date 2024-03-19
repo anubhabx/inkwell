@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.post-content {
+  width: 100%;
+}
+
+.post-content h1 {
+  font-family: serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.post-content h2 {
+  font-family: serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.post-content h3 {
+  font-family: serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.125rem;
+}
+
+.post-content p {
+  font-family: sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.post-content a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.post-content a:hover {
+  color: #0056b3;
+}
+
+.post-content ol {
+  list-style-type: decimal;
+  margin-bottom: 1rem;
+}
+
+.post-content ul {
+  list-style-type: disc;
+  margin-bottom: 1rem;
+}
+
+.post-content li {
+  font-family: sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
