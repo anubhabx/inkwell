@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon ./server/server.js"
+    "server": "nodemon ./server/server.js",
+    "start": "node ./server/server.js",
+    "build": "npm install && cd client && npm install && npm run build && cd .."
   },
   "keywords": [],
   "author": "",
