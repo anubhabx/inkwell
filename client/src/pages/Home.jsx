@@ -8,26 +8,27 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const { user } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch("/api/post/get-posts?limit=6", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+  if (user)
+    useEffect(() => {
+      const fetchPosts = async () => {
+        try {
+          const res = await fetch("/api/post/get-posts?limit=6", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
 
-        const resData = await res.json();
+          const resData = await res.json();
 
-        if (resData.success) setPosts(resData.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+          if (resData.success) setPosts(resData.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    fetchPosts();
-  }, [user._id]);
+      fetchPosts();
+    }, [user._id]);
 
   return (
     <div className="max-w-screen-md mx-auto p-4 my-12">
