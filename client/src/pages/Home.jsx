@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Banner, Button } from "flowbite-react";
+import { Banner, Button, Spinner } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -7,28 +7,31 @@ import { useSelector } from "react-redux";
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const { user } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
 
-  if (user)
-    useEffect(() => {
-      const fetchPosts = async () => {
-        try {
-          const res = await fetch("/api/post/get-posts?limit=6", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/post/get-posts?limit=6", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-          const resData = await res.json();
+        const resData = await res.json();
 
-          if (resData.success) setPosts(resData.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
+        if (resData.success) setPosts(resData.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchPosts();
-    }, [user._id]);
+    fetchPosts();
+  }, [user?._id]);
 
   return (
     <div className="max-w-screen-md mx-auto p-4 my-12">
@@ -67,35 +70,42 @@ const Home = () => {
         </div>
       </Banner>
 
-      <div className="flex flex-col gap-4 mt-12">
-        <h1 className="text-2xl font-semibold font-serif">Recent Posts</h1>
+      <div className="flex flex-col items-center gap-4 mt-12">
+        <h1 className="text-2xl font-semibold font-serif text-left w-full">
+          Recent Posts
+        </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {posts.map((post) => (
-            <div
-              key={post._id}
-              className="flex flex-col gap-4 justify-between p-4 w-full rounded-lg bg-gray-100 bg-opacity-5 hover:bg-opacity-10 transition-opacity duration-200"
-            >
-              <img
-                src={post.img}
-                alt={post.title}
-                className="aspect-video object-cover w-full rounded-lg "
-              />
-              <div className="flex flex-col gap-4 w-full">
-                <h2 className="text-xl font-serif">{post.title}</h2>
-                <p className="text-gray-500">
-                  {post.category.split("_").join("")}
-                </p>
-                <Link to={`/post/${post.slug}`} className="w-full">
-                  <Button color={"gray"} pill className="w-full">
-                    Read article
-                  </Button>
-                </Link>
+        {loading && (
+          <Spinner className="w-12 h-12 self-center" color="purple" size="lg" />
+        )}
+
+        {!loading && posts && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {posts.map((post) => (
+              <div
+                key={post._id}
+                className="flex flex-col gap-4 justify-between p-4 w-full rounded-lg bg-gray-100 bg-opacity-5 hover:bg-opacity-10 transition-opacity duration-200"
+              >
+                <img
+                  src={post.img}
+                  alt={post.title}
+                  className="aspect-video object-cover w-full rounded-lg "
+                />
+                <div className="flex flex-col gap-4 w-full">
+                  <h2 className="text-xl font-serif">{post.title}</h2>
+                  <p className="text-gray-500">
+                    {post.category.split("_").join("")}
+                  </p>
+                  <Link to={`/post/${post.slug}`} className="w-full">
+                    <Button color={"gray"} pill className="w-full">
+                      Read article
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-
+            ))}
+          </div>
+        )}
         <Link to={"/search"} className="flex items-center justify-center">
           <Button gradientDuoTone={"purpleToBlue"} outline>
             View all posts
