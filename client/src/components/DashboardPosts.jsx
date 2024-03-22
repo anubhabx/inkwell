@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FaSpinner } from "react-icons/fa";
+import { FaArrowAltCircleUp, FaArrowUp, FaSpinner } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Button, Modal } from "flowbite-react";
+import { Button, Card, Modal } from "flowbite-react";
 import { Link } from "react-router-dom";
 
 const DashboardPosts = () => {
@@ -12,6 +12,10 @@ const DashboardPosts = () => {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState(null);
+  const [postData, setPostData] = useState({
+    postsInLastMonth: 0,
+    totalPosts: 0,
+  });
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -28,6 +32,10 @@ const DashboardPosts = () => {
 
         if (resData.success) {
           setPosts(resData.data);
+          setPostData({
+            postsInLastMonth: resData.postsInLastMonth,
+            totalPosts: resData.totalPosts,
+          });
           if (resData.data.length < 9) {
             setShowMore(false);
           }
@@ -102,7 +110,28 @@ const DashboardPosts = () => {
   };
 
   return (
-    <div className="mx-auto max-w-screen-md px-4 flex flex-col items-center gap-3">
+    <div className="mx-auto max-w-screen-md px-4 flex flex-col items-center gap-4">
+      {postData && (
+        <div className="flex w-full items-center gap-5">
+          <Card className="flex-grow">
+            <p className="font-normal text-gray-700 dark:text-gray-400">
+              Total Posts
+            </p>
+            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {postData.totalPosts}
+            </h5>
+          </Card>
+          <Card className="flex-grow">
+            <p className="font-normal text-gray-700 dark:text-gray-400">
+              Posts in Last Month
+            </p>
+            <h5 className="text-2xl flex items-center gap-4 font-bold tracking-tight text-gray-900 dark:text-white">
+              {postData.postsInLastMonth}
+              <FaArrowAltCircleUp size={".8em"} color="green" />
+            </h5>
+          </Card>
+        </div>
+      )}
       <h1 className="text-2xl font-bold">Posts from {user.username}</h1>
       {!posts && !loading && (
         <>

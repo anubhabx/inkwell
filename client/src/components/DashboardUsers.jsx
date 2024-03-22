@@ -1,4 +1,4 @@
-import { Avatar, Button, Modal, Table, Toast } from "flowbite-react";
+import { Avatar, Button, Card, Modal, Table } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -11,6 +11,10 @@ const DashboardUsers = () => {
   const [showMore, setShowMore] = useState(true);
   const [deleteUser, setDeleteUser] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [userData, setUserData] = useState({
+    totalUsers: 0,
+    admins: 0,
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -27,6 +31,10 @@ const DashboardUsers = () => {
 
         if (resData.success) {
           setUsers(resData.data);
+          setUserData({
+            totalUsers: resData.totalUsers,
+            admins: resData.admins,
+          });
           if (resData.data.length < 9) setShowMore(false);
         }
       } catch (error) {
@@ -87,6 +95,27 @@ const DashboardUsers = () => {
 
   return (
     <div className="max-w-screen-md mx-auto flex flex-col gap-4">
+      {userData && (
+        <div className="flex w-full items-center gap-5">
+          <Card className="flex-grow">
+            <p className="font-normal text-gray-700 dark:text-gray-400">
+              Total Users
+            </p>
+            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {userData.totalUsers}
+            </h5>
+          </Card>
+          <Card className="flex-grow">
+            <p className="font-normal text-gray-700 dark:text-gray-400">
+              Total Admins
+            </p>
+            <h5 className="text-2xl flex items-center gap-4 font-bold tracking-tight text-gray-900 dark:text-white">
+              {userData.admins}
+            </h5>
+          </Card>
+        </div>
+      )}
+
       <h1 className="text-xl font-semibold text-center">Current Users</h1>
 
       {!users && !loading && <p className="text-center">No users found</p>}

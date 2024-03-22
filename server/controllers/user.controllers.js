@@ -100,10 +100,26 @@ export const getUsers = async (req, res, next) => {
       .limit(limit)
       .skip(skip);
 
+    const totalUsers = await User.countDocuments({ _id: { $ne: currentUser } });
+
+    const dateToday = new Date();
+
+    const oneMonthAgo = new Date(
+      dateToday.getFullYear(),
+      dateToday.getMonth() - 1,
+      dateToday.getDate()
+    );
+
+    const admins = await User.find({
+      role: "admin",
+    }).countDocuments();
+
     res.status(200).json({
       success: true,
       message: "Users retrieved successfully",
       data: users,
+      totalUsers,
+      admins,
     });
   } catch (error) {
     next(handleError(error));
